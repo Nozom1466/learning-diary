@@ -1,4 +1,9 @@
-## Academic Homepages
+学一乐(〃'▽'〃)
+
+
+一些有趣的网站：
+
+### Academic Homepages
 
 - https://www.doublez.site/research
 - https://soheeyang.github.io/
@@ -7,25 +12,25 @@
 - https://ysymyth.github.io/
 
 
-## Experiences 
+### Experiences 
 
 - https://osjobs.net/
 
 
-## Techs
+### Techs
 
 - https://techdiylife.github.io/blog/
 - https://decodingml.substack.com/
 
 
-## Tools
+### Tools
 
 - https://novelai.net/
 - https://lab.magiconch.com/
 - https://landscape.lfai.foundation/
 
 
-## Books
+### Books
 
 - https://newfacade.github.io/notes-on-reinforcement-learning/01-intro.html#
 - https://www.huaxiaozhuan.com/
@@ -38,7 +43,7 @@
 - https://hrl.boyuai.com/
 
 
-## Course Homepage
+### Course Homepage
 
 - https://www.cs.princeton.edu/~kothari/spring25.html
 - https://sites.google.com/view/cos598aisafety/home
@@ -55,13 +60,13 @@
 - https://stanford-cs329s.github.io/syllabus.html
 
 
-## Coding (LeetCode)
+### Coding (LeetCode)
 
 - https://faq.cruelcoding.com/
 - https://programmercarl.com/
 
 
-## YouTuber or Bilibili Up
+### YouTuber or Bilibili Up
 - 五道口纳什：https://space.bilibili.com/59807853
 - 灵茶山艾府: https://space.bilibili.com/206214
 - Car1 卡尔: https://space.bilibili.com/7875429
