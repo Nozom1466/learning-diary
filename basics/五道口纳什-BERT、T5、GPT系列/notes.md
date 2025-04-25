@@ -27,3 +27,6 @@ print(model(**batch_input))
     3.4 tokenizer.vocab 存储了 token -> id 的 mapping; special tokens: tokenizer.special_tokens_map
 
     3.5 attention mask 中为 1 的: 没有 mask 的，0的: mask的; 为什么为 0 ? -> 因为 [PAD] label 是 0.
+
+**Reference**
+[1] https://github.com/chunhuizhang/bilibili_vlogs/blob/master/hugface/01_tokenizer_sentiment_analysis.ipynb
