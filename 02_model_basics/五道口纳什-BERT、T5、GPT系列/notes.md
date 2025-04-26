@@ -92,7 +92,7 @@
 
 1. 文本语料 newgroups: 媒体新闻
   
-2. torch.no_grad versus requires_grad=False
+2. torch.no_grad versus requires_grad=False [可以看下 with torch.no_grad() 的源码]
 
     2.1 torch.no_grad
 
