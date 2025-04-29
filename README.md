@@ -20,7 +20,6 @@
 ### Techs
 
 - https://techdiylife.github.io/blog/
-- https://decodingml.substack.com/
 
 
 ### Tools
@@ -58,6 +57,8 @@
 - https://hanlab.mit.edu/courses/2024-fall-65940
 - https://fall2019.fullstackdeeplearning.com/
 - https://stanford-cs329s.github.io/syllabus.html
+- https://decodingml.substack.com/
+- https://theneuralmaze.substack.com/
 
 
 ### Coding (LeetCode)
