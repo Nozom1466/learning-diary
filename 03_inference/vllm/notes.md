@@ -20,6 +20,7 @@ decoding ....
 
 ## PagedAttention
 
+### 简单概述
 **作者**：UCB [Sky Computing Lab](https://sky.cs.berkeley.edu/) 的项目
 
 **效果**：
@@ -51,15 +52,33 @@ decoding ....
 
 
 **性能分析**:
+1. 空间浪费主要是在最后一个 block上，但是浪费率低于 4%，所以利用率很高了.
+2. PagedAttention 存储方式考虑到了parallel sampling 并行生成的情况。这时候两个 sequence 都要生成，生成的内容不能写到一个区域，所以需要copy一下这一个 block 到其他位置之后，两个 sequence 继续生成，生成的结果分别写在copy前后两个地方，这样不会冲突。中间通过记录 reference count来检测是否将会发生写入冲突。具体看下边 gif。
+3. 
+![copy-on-write](https://blog.vllm.ai/assets/figures/annimation3.gif)
+
+**References**
+
+[1] https://blog.vllm.ai/2023/06/20/vllm.html
+
+
+
+### PagedAttention 论文
+
+
+
+**References**
+[1] https://arxiv.org/abs/2309.06180
+
+
+
 [TO BE CONTINUED]
 
 
 
 
 
-**References**
 
-[1] https://blog.vllm.ai/2023/06/20/vllm.html
 
 
 
