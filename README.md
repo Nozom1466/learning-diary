@@ -41,6 +41,7 @@
 - https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1
 - https://d2l.ai/
 - https://hrl.boyuai.com/
+- https://skyzh.github.io/tiny-llm/
 
 
 ### Course Homepage
