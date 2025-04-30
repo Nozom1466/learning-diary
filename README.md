@@ -20,6 +20,7 @@
 ### Techs
 
 - https://techdiylife.github.io/blog/
+- https://lmsys.org/
 
 
 ### Tools
