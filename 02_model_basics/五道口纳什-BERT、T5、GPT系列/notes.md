@@ -88,6 +88,58 @@
 
 
 
+3. [模型输出](https://huggingface.co/docs/transformers/en/model_doc/bert#transformers.BertModel.forward.returns)
+
+    3.1  最少有两个 output: last_hidden_state 和 pooler_output，当 mdoel.config.output_hidden_states=True 时，另外输出 hidden_states.
+
+    3.2  last_hidden_states: 
+
+    - 最后一层的 hidden_states. 
+
+    - 维度为：(batch_size, seq_len, hidden_size)
+
+    3.3 pooler_output: 
+
+    - 其实是两个过程的组合：首先提取出 last_hidden_layer 中 [CLS] token 对应的 embedding，然后通过一个全连接层(dense)，再加一个 tanh 激活函数之后的输出。 *所以说 pooler_output 是 [CLS] embedding 是错误的。*
+
+    - 这个全连接层的参数是通过预训练时进行 next sentence prediction (classification)任务中的获得的。注意在 NSP 中会经历以下流程：
+
+    | 步骤                | 输入维度          | 操作                          | 输出维度          |
+    |---------------------|-------------------|------------------------------|-------------------|
+    | [CLS]隐藏状态        | [batch_size, H]   | 无                            | [batch_size, H]   |
+    | Pooler层（Linear层） | [batch_size, H]   | `W_pooler ∈ ℝ^{H×H}`          | [batch_size, H]   |
+    | tanh激活             | [batch_size, H]   | 非线性变换                     | [batch_size, H]   |
+    | NSP分类头（Linear层）| [batch_size, H]   | `W_nsp ∈ ℝ^{H×2}, b_nsp ∈ ℝ^2`| [batch_size, 2]   |
+
+    - Pooler 层输出可以当作一个 **句子级别的 embedding 表示**，如果要对句子进行整体理解和表示，比如说分类和相似度匹配等操作，那么 Pooler output 就可以当作句子的 embedding。
+    - 维度为 [batch_size, hidden_size]
+
+    3.4 hidden_states:
+
+    - 这是 BERT 每一层的 hidden_states
+
+    - 维度为 (1 + layer_nums, batch_size, seq_length, hidden_size)，其中 layer_nums 对于 BERT-base 来说是 12层。多加的一层是 embedding 层的输出
+        
+    3.5 获取方式
+
+    - last_hidden_states: output[0] == output[2][-1]
+
+    - pooler_output: output[1] == model.pooler(output[2][-1]) 注意这里没有 *显式* 取出 [CLS]，因为这一步会在 BertPooler 中实现：
+
+    ```python
+    class BertPooler(nn.Module):
+        def __init__(self, hidden_states):
+            first_token_tensor = hidden_states[:, 0]  # 这里取出
+            pooled_output = self.dense(first_token_tensor)
+            pooled_output = self.activation(first_token_tensor)
+            return pooled_output
+    ```
+
+    - hidden_states: output[2] (如果只有 output_hidden_states=True)
+
+> [关于 RoBERTa 移除 NSP 任务后的 Pooler 问题](https://www.zhihu.com/question/466862920)
+
+
 ### Appendix
 
 1. 文本语料 newgroups: 媒体新闻
