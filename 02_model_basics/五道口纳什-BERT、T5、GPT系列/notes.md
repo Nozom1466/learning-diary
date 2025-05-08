@@ -142,7 +142,23 @@
 
 
 4. Attention 计算
-[先占个位置]
+
+    4.1 关于 Attention 的维度推导：
+    
+    - 关于一个注意力头的推导：最开始我们有一个 embedding，这个 embedding 可以是上一层输出或者是输入的 embedding，记为 $E_{T\times d}$，其中 $T$ 是输入序列的长度，也就是 sequence length，$d$ 是 embedding 的维度。注意这里是一个注意力头的推导，所以没有 batch_size。另外我们有三个参数矩阵 $W_{k: d\times d_k}, W_{q: d\times d_q}, W_{v: d\times d_v}$。那么矩阵乘之后得到 $k_{T\times d_k}, q_{T\times d_q}, v_{T\times d_v}$。经过 softmax 得到注意力分数：
+      
+    $$attnScore_{T \times T} = softmax(\frac{q_{T\times d_q} \cdot k_{T\times d_k}^{T}}{\sqrt{d_q}})$$
+   
+    所以得到的 attention score 就是 $T \times T$。并且一定有 $d_k = d_q$。最后乘以 $v_{T\times d_v}$ 就能得到 attention output $attn_{i}$，维度为 $T \times d_v$。所以说这里对于 $d_v$ 没有明确的要求。
+
+    - 关于注意力的拼接：得到注意力结果之后拼接起来，也就是
+   
+    $$attn_{T\times (d_v \times n)} = \left(attn_{0}|attn_{1}|...|attn_{n - 1}\right)$$
+   
+    参数矩阵 KQV 也相似，对于每一个 $k$ 有 $k_i = E_{T\times d} \cdot W_{k_i: d\times d_k}$，把 $W_{k_i: d\times d_k}$ 拼接起来就有：
+   
+    $$K_{T\times (d_k \times n)} = \left(W_{k_0: d\times d_k} |  W_{k_1: d\times d_k} | ... | W_{k_{n - 1}: d\times d_k} \right)$$ 
+
 ```python
 ATTENTION_SIZE = 64  # ATTENTION_SIZE || embedding_size
 
