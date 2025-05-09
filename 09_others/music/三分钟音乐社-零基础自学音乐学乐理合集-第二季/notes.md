@@ -70,8 +70,20 @@
 
 
 
+### 17. 12345671 的内在规则
+
+就是所谓 “全全半全全全半” 的规则，保持这个间距序列可以得到 12345671 在不同音阶上的演奏方法。其音高图为：
+
+![音高](https://myblog-1316371247.cos.ap-shanghai.myqcloud.com/myblog/20250509095745015.png)
 
 
+具体到钢琴键盘上更直观一些，比如说 D 开始：
+
+![键盘](https://myblog-1316371247.cos.ap-shanghai.myqcloud.com/myblog/20250509095938457.png)
+
+最后我们给出对应表：
+
+![对应表](https://myblog-1316371247.cos.ap-shanghai.myqcloud.com/myblog/20250509100045374.png)
 
 
 
