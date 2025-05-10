@@ -159,61 +159,58 @@
    
     $$K_{T\times (d_k \times n)} = \left(W_{k_0: d\times d_k} |  W_{k_1: d\times d_k} | ... | W_{k_{n - 1}: d\times d_k} \right)$$ 
 
-> [关于将输出映射到 embedding 维度的矩阵 W_O](https://www.cnblogs.com/rossiXYZ/p/18759167#%E7%9F%A9%E9%98%B5)
-
-4.2 简单的 Attention 实现：
-
-    - 一个简单的实现过程，不带 $W_O$：
-    ```python
-    ATTENTION_SIZE = 64  # ATTENTION_SIZE || embedding_size
-
-    def get_K_or_Q_or_V(convert_matrix: Tensor, input: Tensor, bias: Tensor) -> Tensor:
-        """Get K or Q or V in attention for one sample in a batch and on attention head
-
-        Args:
-            convert_matrix: [emb_size, emb_size], K or Q or V inself-attention layer
-            input: [seq_len, emb_size], layer inputs
-            bias: [emb_size], bias in self attention layer
-        Returns:
-            k or q or v: [seq_len, ATTENTION_SIZE]
-        """
-        # y = x @ A^T + b
-        # ATTENTION_SIZE: size of each head in multi-head attention
-        return input @ convert_matrix.weight.T[:, :ATTENTION_SIZE] + bias[:ATTENTION_SIZE]
-
-
-    # 省略 input_tests embedding 得到的过程, model 初始化过程
-    inputs = model.embeddings(
-        input_tests['input_ids']，
-        inputs_tests['token_type_ids']  # 这里 embeddings 层的输入输出要看一下
-    )  # [batch_size, seq_len, emb_size]
-
-
-    # 计算第一层 self-attention 的一个 attention head 的 attention score
-    q = get_K_or_Q_or_V(
-        convert_matrix=model.encoder.layer[0].attention.self.query.weight,
-        input=inputs[0],  # 1st sample in batch
-        bias=model.encoder.layer[0].attention.self.query.bias
-    )  # [seq_len, ATTENTION_SIZE]
-
-    k = get_K_or_Q_or_V(
-        convert_matrix=model.encoder.layer[0].attention.self.key.weight,
-        input=inputs[0],  # 1st sample in batch
-        bias=model.encoder.layer[0].attention.self.key.bias
-    )  # [seq_len, ATTENTION_SIZE]
-
-    v = get_K_or_Q_or_V(
-        convert_matrix=model.encoder.layer[0].attention.self.value.weight,
-        input=inputs[0],  # 1st sample in batch
-        bias=model.encoder.layer[0].attention.self.value.bias
-    )  # [seq_len, ATTENTION_SIZE]
-
-    attn_score = torch.nn.Softmax(dim=-1)(q @ k.T / math.sqrt(ATTENTION_SIZE))  # attention score, [seq_len, seq_len]
-    attn_embed = attn_score @ v  # [seq_len, ATTENTION_SIZE], attention embedding
-
-    # 拼接所有 attention attention embedding -> [seq_len, emb_size=ATTENTION_SIZE * num_head]
-    ```
-
+    4.2 简单的 Attention 实现：
+        - 一个简单的实现过程，不带 $W_O$：
+   
+        ```python
+        ATTENTION_SIZE = 64  # ATTENTION_SIZE || embedding_size
+    
+        def get_K_or_Q_or_V(convert_matrix: Tensor, input: Tensor, bias: Tensor) -> Tensor:
+            """Get K or Q or V in attention for one sample in a batch and on attention head
+    
+            Args:
+                convert_matrix: [emb_size, emb_size], K or Q or V inself-attention layer
+                input: [seq_len, emb_size], layer inputs
+                bias: [emb_size], bias in self attention layer
+            Returns:
+                k or q or v: [seq_len, ATTENTION_SIZE]
+            """
+            # y = x @ A^T + b
+            # ATTENTION_SIZE: size of each head in multi-head attention
+            return input @ convert_matrix.weight.T[:, :ATTENTION_SIZE] + bias[:ATTENTION_SIZE]
+    
+    
+        # 省略 input_tests embedding 得到的过程, model 初始化过程
+        inputs = model.embeddings(
+            input_tests['input_ids']，
+            inputs_tests['token_type_ids']  # 这里 embeddings 层的输入输出要看一下
+        )  # [batch_size, seq_len, emb_size]
+    
+    
+        # 计算第一层 self-attention 的一个 attention head 的 attention score
+        q = get_K_or_Q_or_V(
+            convert_matrix=model.encoder.layer[0].attention.self.query.weight,
+            input=inputs[0],  # 1st sample in batch
+            bias=model.encoder.layer[0].attention.self.query.bias
+        )  # [seq_len, ATTENTION_SIZE]
+    
+        k = get_K_or_Q_or_V(
+            convert_matrix=model.encoder.layer[0].attention.self.key.weight,
+            input=inputs[0],  # 1st sample in batch
+            bias=model.encoder.layer[0].attention.self.key.bias
+        )  # [seq_len, ATTENTION_SIZE]
+    
+        v = get_K_or_Q_or_V(
+            convert_matrix=model.encoder.layer[0].attention.self.value.weight,
+            input=inputs[0],  # 1st sample in batch
+            bias=model.encoder.layer[0].attention.self.value.bias
+        )  # [seq_len, ATTENTION_SIZE]
+    
+        attn_score = torch.nn.Softmax(dim=-1)(q @ k.T / math.sqrt(ATTENTION_SIZE))  # attention score, [seq_len, seq_len]
+        attn_embed = attn_score @ v  # [seq_len, ATTENTION_SIZE], attention embedding
+    
+        # 拼接所有 attention attention embedding -> [seq_len, emb_size=ATTENTION_SIZE * num_head]
+        ```
 
 > [关于将输出映射到 embedding 维度的矩阵 W_O](https://www.cnblogs.com/rossiXYZ/p/18759167#%E7%9F%A9%E9%98%B5)
 
