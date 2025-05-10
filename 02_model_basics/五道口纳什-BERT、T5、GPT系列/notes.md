@@ -161,58 +161,125 @@
 
 > [关于将输出映射到 embedding 维度的矩阵 W_O](https://www.cnblogs.com/rossiXYZ/p/18759167#%E7%9F%A9%E9%98%B5)
 
+4.2 简单的 Attention 实现：
+
+    - 一个简单的实现过程，不带 $W_O$：
+    ```python
+    ATTENTION_SIZE = 64  # ATTENTION_SIZE || embedding_size
+
+    def get_K_or_Q_or_V(convert_matrix: Tensor, input: Tensor, bias: Tensor) -> Tensor:
+        """Get K or Q or V in attention for one sample in a batch and on attention head
+
+        Args:
+            convert_matrix: [emb_size, emb_size], K or Q or V inself-attention layer
+            input: [seq_len, emb_size], layer inputs
+            bias: [emb_size], bias in self attention layer
+        Returns:
+            k or q or v: [seq_len, ATTENTION_SIZE]
+        """
+        # y = x @ A^T + b
+        # ATTENTION_SIZE: size of each head in multi-head attention
+        return input @ convert_matrix.weight.T[:, :ATTENTION_SIZE] + bias[:ATTENTION_SIZE]
 
 
-一个简单的实现过程，不带 $W_O$：
-```python
-ATTENTION_SIZE = 64  # ATTENTION_SIZE || embedding_size
-
-def get_K_or_Q_or_V(convert_matrix: Tensor, input: Tensor, bias: Tensor) -> Tensor:
-    """Get K or Q or V in attention for one sample in a batch and on attention head
-
-    Args:
-        convert_matrix: [emb_size, emb_size], K or Q or V inself-attention layer
-        input: [seq_len, emb_size], layer inputs
-        bias: [emb_size], bias in self attention layer
-    Returns:
-        k or q or v: [seq_len, ATTENTION_SIZE]
-    """
-    # y = x @ A^T + b
-    # ATTENTION_SIZE: size of each head in multi-head attention
-    return input @ convert_matrix.weight.T[:, :ATTENTION_SIZE] + bias[:ATTENTION_SIZE]
+    # 省略 input_tests embedding 得到的过程, model 初始化过程
+    inputs = model.embeddings(
+        input_tests['input_ids']，
+        inputs_tests['token_type_ids']  # 这里 embeddings 层的输入输出要看一下
+    )  # [batch_size, seq_len, emb_size]
 
 
-# 省略 input_tests embedding 得到的过程, model 初始化过程
-inputs = model.embeddings(
-    input_tests['input_ids']，
-    inputs_tests['token_type_ids']  # 这里 embeddings 层的输入输出要看一下
-)  # [batch_size, seq_len, emb_size]
+    # 计算第一层 self-attention 的一个 attention head 的 attention score
+    q = get_K_or_Q_or_V(
+        convert_matrix=model.encoder.layer[0].attention.self.query.weight,
+        input=inputs[0],  # 1st sample in batch
+        bias=model.encoder.layer[0].attention.self.query.bias
+    )  # [seq_len, ATTENTION_SIZE]
+
+    k = get_K_or_Q_or_V(
+        convert_matrix=model.encoder.layer[0].attention.self.key.weight,
+        input=inputs[0],  # 1st sample in batch
+        bias=model.encoder.layer[0].attention.self.key.bias
+    )  # [seq_len, ATTENTION_SIZE]
+
+    v = get_K_or_Q_or_V(
+        convert_matrix=model.encoder.layer[0].attention.self.value.weight,
+        input=inputs[0],  # 1st sample in batch
+        bias=model.encoder.layer[0].attention.self.value.bias
+    )  # [seq_len, ATTENTION_SIZE]
+
+    attn_score = torch.nn.Softmax(dim=-1)(q @ k.T / math.sqrt(ATTENTION_SIZE))  # attention score, [seq_len, seq_len]
+    attn_embed = attn_score @ v  # [seq_len, ATTENTION_SIZE], attention embedding
+
+    # 拼接所有 attention attention embedding -> [seq_len, emb_size=ATTENTION_SIZE * num_head]
+    ```
 
 
-# 计算第一层 self-attention 的一个 attention head 的 attention score
-q = get_K_or_Q_or_V(
-    convert_matrix=model.encoder.layer[0].attention.self.query.weight,
-    input=inputs[0],  # 1st sample in batch
-    bias=model.encoder.layer[0].attention.self.query.bias
-)  # [seq_len, ATTENTION_SIZE]
+> [关于将输出映射到 embedding 维度的矩阵 W_O](https://www.cnblogs.com/rossiXYZ/p/18759167#%E7%9F%A9%E9%98%B5)
 
-k = get_K_or_Q_or_V(
-    convert_matrix=model.encoder.layer[0].attention.self.key.weight,
-    input=inputs[0],  # 1st sample in batch
-    bias=model.encoder.layer[0].attention.self.key.bias
-)  # [seq_len, ATTENTION_SIZE]
 
-v = get_K_or_Q_or_V(
-    convert_matrix=model.encoder.layer[0].attention.self.value.weight,
-    input=inputs[0],  # 1st sample in batch
-    bias=model.encoder.layer[0].attention.self.value.bias
-)  # [seq_len, ATTENTION_SIZE]
+![trans-block](https://myblog-1316371247.cos.ap-shanghai.myqcloud.com/myblog/trans_block.png)
 
-attn_score = torch.nn.Softmax(dim=-1)(q @ k.T / math.sqrt(ATTENTION_SIZE))  # attention score, [seq_len, seq_len]
-attn_embed = attn_score @ v  # [seq_len, ATTENTION_SIZE], attention embedding
+5. 残差连接与残差模块
 
-# 拼接所有 attention attention embedding -> [seq_len, emb_size=ATTENTION_SIZE * num_head]
-```
+   5.1 在 attention 前后和 FFN 前后各有一次残差连接，见上图
+
+   5.2 一个 block 的构成：
+
+   ```shell
+   (0): BertLayer(
+        (attention): BertAttention(
+            (self): BertSelfAttention(
+                (query): Linear(in_features=768, out_features=768, bias=True)
+                (key): Linear(in_features=768, out_features=768, bias=True)
+                (value): Linear(in_features=768, out_features=768, bias=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+                (dense): Linear(in_features=768, out_features=768, bias=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+            )
+        )
+        (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True) 
+        )
+        (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+        )
+    )
+   ```
+
+   所以 (intermediate) 是 FFN 第一层，BertOutput (dense) 是第二层，维度从 768 -> 3072 -> 768。
+
+   5.3 两次 add & norm:
+
+   - 第一次 [BertSelfOutput](https://github.com/huggingface/transformers/blob/8f08318769c15fdb6b64418cbb070e8a8b405ffb/src/transformers/models/bert/modeling_bert.py#L425C1-L436C29)：
+    
+   ```python
+   class BrosSelfOutput(nn.Module):
+        def __init__(self, config):
+            super().__init__()
+            self.dense = nn.Linear(config.hidden_size, config.hidden_size)
+            self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
+            self.dropout = nn.Dropout(config.hidden_dropout_prob)
+
+        def forward(self, hidden_states: torch.Tensor, input_tensor: torch.Tensor) -> torch.Tensor:
+            hidden_states = self.dense(hidden_states)
+            hidden_states = self.dropout(hidden_states)  # 先 dropout 后 layerNorm
+            hidden_states = self.LayerNorm(hidden_states + input_tensor)  # add & norm
+            return hidden_states
+   ```
+
+   - 第二次 [BertOutput](https://github.com/huggingface/transformers/blob/8f08318769c15fdb6b64418cbb070e8a8b405ffb/src/transformers/models/bert/modeling_bert.py#L511)，和 BertSelfOutput 一样的流程
+   
+
+
+> [关于 BertIntermediate 层的必要性](https://zhuanlan.zhihu.com/p/552062991#:~:text=1.2%E3%80%81BertIntermediate%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8%E8%AE%A8%E8%AE%BA)，以及附带 [paper](https://arxiv.org/abs/2012.11881)
+>
+> [关于在 BERTConig 里设置 BERTIntermediate 的 activation function 的 ISSUE](https://github.com/huggingface/transformers/issues/15)
 
 
 
