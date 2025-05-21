@@ -42,6 +42,7 @@
 - https://d2l.ai/
 - https://hrl.boyuai.com/
 - https://skyzh.github.io/tiny-llm/
+- https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e
 
 
 ### Course Homepage
