@@ -84,6 +84,8 @@
         
 
 > 关于 tokenizer 的分词细节 Appendix 3
+>
+> bert-base-uncased 对大小写不敏感
 
 
 
@@ -277,6 +279,39 @@
 > [关于 BertIntermediate 层的必要性](https://zhuanlan.zhihu.com/p/552062991#:~:text=1.2%E3%80%81BertIntermediate%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8%E8%AE%A8%E8%AE%BA)，以及附带 [paper](https://arxiv.org/abs/2012.11881)
 >
 > [关于在 BERTConig 里设置 BERTIntermediate 的 activation function 的 ISSUE](https://github.com/huggingface/transformers/issues/15)
+
+
+
+6. 输出头
+
+    6.1 BertForMaskedLM 跟 BertModel 的区别就是 head 不一样，后者的 head 是 BertPooler，前者是 BertOnlyMLMHead，输出的维度是 30522，主要是在 mask 的位置要预测这个是哪个词
+   ```shell
+   (cls): BertOnlyMLMHead(
+    (predictions): BertLMPredictionHead(
+      (transform): BertPredictionHeadTransform(
+        (dense): Linear(in_features=768, out_features=768, bias=True)
+        (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      )
+      (decoder): Linear(in_features=768, out_features=30522, bias=True)
+    )
+   )
+   ```
+   
+   6.2 mask 过程：15% 概率变为 mask，用 boolean 列表表示 mask，[MASK] 对应的 token_id 是 103
+   
+   6.3 cls 层的构成：[source code](https://github.com/huggingface/transformers/blob/35becc6d84f620c3da48db460d6fb900f2451782/pytorch_pretrained_bert/modeling.py#L368)
+   
+       - `transform`: 维度没变
+   
+       - `decoder`: 映射到词汇空间
+   
+   6.4 loss 的计算: 交叉熵 `nn.CrossEntropyLoss()`.
+   
+   6.5 翻译为词汇：`argmax` 取出 `[batch_size, seq_len, vovab_size]` 中下标， `convert_ids_to_tokens` 即可。
+
+
+> [nn.CrossEntropyLoss()](https://github.com/pytorch/pytorch/blob/v2.7.0/torch/nn/modules/loss.py#L1146), [nn.functional.cross_entropy](https://github.com/pytorch/pytorch/blob/main/torch/nn/functional.py#L3393) ，这里 `input` 可以是 logits，第二个参数 target 可以是 ground truth indices
+
 
 
 
