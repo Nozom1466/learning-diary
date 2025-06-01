@@ -63,6 +63,7 @@
 - https://dlsyscourse.org/
 - https://decodingml.substack.com/
 - https://theneuralmaze.substack.com/
+- https://stanford-cs336.github.io/spring2025/index.html
 
 
 ### Coding (LeetCode)
