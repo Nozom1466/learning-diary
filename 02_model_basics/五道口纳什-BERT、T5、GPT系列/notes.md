@@ -305,7 +305,7 @@
    
        - `decoder`: 映射到词汇空间
    
-   6.4 loss 的计算: 交叉熵 `nn.CrossEntropyLoss()`.
+   6.4 loss 的计算: 交叉熵 `nn.CrossEntropyLoss()`. 看样子这里是把所有的 token 全部预测并且输出了，而不是只输出 mask 部分。在计算 loss 的时候也是一起计算的 loss。
    
    6.5 翻译为词汇：`argmax` 取出 `[batch_size, seq_len, vovab_size]` 中下标， `convert_ids_to_tokens` 即可。
 

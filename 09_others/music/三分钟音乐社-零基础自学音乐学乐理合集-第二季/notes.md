@@ -120,9 +120,53 @@
 
 ### 19. 音阶是什么、有什么用
  
+音阶定义：将调式中的音，从以 **主音开始到以主音结束**，由低到高(叫做上行)，或者由高到低(叫做下行)，以阶梯状排列起来，就叫做音阶
+
+音阶用处：1. 简化说法  2. 认谱
+
+> 注意：1. 主音开始主音结束 2. 一个方向的变化（上行或者下行）  3. 需要包含调式中所有音
 
 
 
+### 20. 一个问题
+
+1. 大调是不区分组的，哪个组音都可以用，写出来表示的是 **音名的范围**
+
+
+### 21. 黑键出发的大调
+
+1. 黑键的两个名字哪个作为大调的初始音名称？主要是为了 ABCDEFG 这几个字母全都出现，有的是白键也得变换为其他键的升降调。比如说 C sharp 大调：
+
+```
+C sharp
+D sharp
+E sharp  # supposed to be F
+F sharp
+G sharp
+A sharp
+B sharp
+C sharp
+```
+
+又比如说 D flat 大调（也就是 C sharp 大调）
+
+```
+D flat
+E flat
+F
+G flat
+A flat
+B flat
+C 
+D flat
+```
+
+这里 C sharp 和 D flat 大调就是 **等音调**。
+
+
+2. 因为有的时候等音调的表示复杂程度不一样（比如出现重升降），我们更常用以下这些表示方法（未划线）
+
+![majors start with black keys](https://myblog-1316371247.cos.ap-shanghai.myqcloud.com/myblog/20250607001439881.png)
 
 
 
