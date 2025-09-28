@@ -313,6 +313,14 @@
 > [nn.CrossEntropyLoss()](https://github.com/pytorch/pytorch/blob/v2.7.0/torch/nn/modules/loss.py#L1146), [nn.functional.cross_entropy](https://github.com/pytorch/pytorch/blob/main/torch/nn/functional.py#L3393) ，这里 `input` 可以是 logits，第二个参数 target 可以是 ground truth indices
 
 
+### 03 Finetuning
+
+1. 
+
+
+
+
+
 
 
 ### Appendix
