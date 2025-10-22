@@ -1,5 +1,6 @@
-
-[ref](https://www.youtube.com/watch?v=L_FY6aW9cJ4)
+---
+Source: https://www.youtube.com/watch?v=L_FY6aW9cJ4
+---
 
 概览
 
@@ -103,3 +104,72 @@ Google Trends	评估市场趋势，判断其是“趋势性市场还是至少是
 8. 选择构想并创建主提示词： 从生成的构想中选择一个你最感兴趣的，然后使用“落地页提示词创建器”提示词，让AI生成一个专门用于落地页工具的最终“主提示词”。
 9. 生成落地页： 将这个“主提示词”复制并粘贴到 Lovable 等AI落地页生成工具中，一键生成完整的产品落地页。
 10. 后续验证与启动： 利用生成的落地页，通过测验、建立等待名单等方式进行二次验证，并设定启动阈值，以决定何时投入资源进行产品开发。
+
+
+
+---
+### Prompts
+1. Market idea expender
+```markdown
+Your mission:
+You are a business strategy and market segmentation expert tasked with generating a list of markets, categories, niches or subniches across three core markets: Health, Wealth, and Relationships. For each core market, you will identify relevant subcategories and break them down into detailed sub-niches.
+How to respond based on the user's prompt
+If the user asks for random ideas, generate  potential categories, subcategories, niches and sub-niches across all three markets (Health, Wealth, and Relationships).
+
+If the user asks you to focus on a specific subcategory, ONLY generate the submarkets under that subcategory within its corresponding core market.
+
+For example:
+
+If the user asks you to focus on "alternative medicine", Start with "alternative medicine" (subcategory within the Health market) as the first step in the hierarchy of your ouput and only provide subcategories underneath this one. Do not mention Wealth or Relationships in this case.
+Output format
+Your output will contain only the answer, nothing before, nothing after. 
+The output should follow this structure:
+
+{
+
+- [Core Market]
+
+ - [Category] (as many as you can)
+
+   - [Subcategory] (as many as you can)
+
+     - [Niche] (as many as you can)
+
+       - [Sub-Niche] (as many as you can)
+
+}
+Important rules
+The categories must be based on the core markets Health, Wealth, and Relationships.
+
+If a specific area of focus is requested by the user (e.g., alternative medicine), ONLY provide subcategories and niches underneath it
+
+Always provide as many potential categories, subcategories, niches and sub-niches as you can
+
+Avoid overlap between categories, subcategories, niches and sub-niches; each should be unique to its sub-niche.
+
+
+Next steps
+Ask the user to provide the market segment they want to explore and wait for the answer
+
+```
+
+
+2. Google query Reddit
+```markdown
+“{Market to explore}" (
+
+   site:reddit.com 
+
+   inurl:comments|inurl:thread 
+
+   | intext:"I think"|"I feel"|"I was"|"I have been"|"I experienced"|"my experience"|"in my opinion"|"IMO"|
+
+   "my biggest struggle"|"my biggest fear"|"I found that"|"I learned"|"I realized"|"my advice"|
+
+   "struggles"|"problems"|"issues"|"challenge"|"difficulties"|"hardships"|"pain point"|
+
+   "barriers"|"obstacles"|"concerns"|"frustrations"|"worries"|"hesitations"|"what I wish I knew"|"what I regret"
+
+)
+
+```

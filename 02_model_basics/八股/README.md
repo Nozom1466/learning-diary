@@ -23,9 +23,14 @@ Q: Bias / Variance Tradeoff
 
 ## 正则化
 
-Q: 
+Q: L1 正则化
+	参数绝对值之和， LASSO, L1 norm, $\Vert \textbf{x}\Vert_1 = \sum_i|x_i|$，特征选择，无法求导，稀疏解，
 
+Q: L2 正则化
+	参数平方和平方根，Ridge, $\Vert\textbf{x}\Vert = \sqrt{\sum_i x_i^2}$，更缓和
 
+Q: 为什么 L1 可以用来特征选择？
+	参数空间里边，L1 就相当于 一个围绕在原点的菱形，($|L| < C$, 其中 $C$ 是约束半径，跟系数 $\lambda$ 不一样，或者说二者作用相反)，参数优化的时候，需要找到一组参数在这个区域内。在参数调整的过程中，参数更有可能碰到 L1 在轴上的角，所以就比较容易为 0 。而 L2 就是一个圆，更加光滑，所以参数更新比较缓和。
 
 
 ## 指标
@@ -59,3 +64,16 @@ Q：NDCG (Normalized Discounted cumulative gain)，归一化折损累计增益�
 Q：CTR (Click-Through-Rate) 是什么？
 	A: 表示在看过您的广告或非付费商品详情的用户中有多少用户最后点击了广告。点击率可用于评估您的关键字、广告以及非付费商品详情的效果。点击率是指您的广告所获得的点击次数除以其展示次数所得的比值：点击次数 ÷ 展示次数 = 点击率。例如，如果您获得了 5 次点击和 100 次展示，点击率就是 5%。
 
+Q: Precision/Recall/ F1 Score
+	二分类问题，有四种分类情况：TP, TN, FP, FN, precision 是在你预测是正确的答案中，你预测对了多少, TP /(TP + FP),  recall 是在所有正确答案中，你预测是正确的预测对了多少，TP / (TP + FN), 前者关注模型预测，后者关心真实数据。
+	简单来说，如果你预测的结果是一个列表 L, 这个列表中正确的数量 / 列表长度 就是 precision；这个列表中正确的数量 / 真实数据正确的数量就是 recall；F1 就是二者的调和平均
+
+Q: 混淆矩阵
+	TNTPFNFP四个构成的矩阵就是 confusion matrix。有更多分类的混淆矩阵，也是类似形式
+
+Q: macro-$F_1$ vs micro-$F_1$
+	macro-F1 就是计算各个 precision 和 各个 recall，然后取平均值得到 macro-P, macro-R，调和平均计算结果。
+	micro-F1 就是对元素进行平均，基于总体的混淆矩阵计算 micro-P, R, 然后计算 micro-F1
+
+Q: ROC 曲线和 AUC 面积
+	
