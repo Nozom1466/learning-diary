@@ -3,15 +3,6 @@
 
 一些有趣的网站：
 
-### Academic Homepages
-
-- https://www.doublez.site/research
-- https://soheeyang.github.io/
-- https://guibinz.top/
-- https://preminstrel.com/
-- https://ysymyth.github.io/
-
-
 ### Experiences
 
 - https://osjobs.net/
@@ -64,12 +55,22 @@
 - https://decodingml.substack.com/
 - https://theneuralmaze.substack.com/
 - https://stanford-cs336.github.io/spring2025/index.html
+- https://www.youtube.com/watch?v=Ub3GoFaUcds&list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy
 
 
 ### Coding (LeetCode)
 
 - https://faq.cruelcoding.com/
 - https://programmercarl.com/
+
+
+### Projects
+
+- https://github.com/GeeeekExplorer/nano-vllm
+- https://github.com/huggingface/nanoVLM
+- https://github.com/karpathy/nanochat
+- https://github.com/sgl-project/mini-sglang.git
+- https://github.com/OpenRLHF/OpenRLHF
 
 
 ### YouTuber or Bilibili Up
