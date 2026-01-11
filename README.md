@@ -34,7 +34,7 @@
 - https://hrl.boyuai.com/
 - https://skyzh.github.io/tiny-llm/
 - https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e
-
+- https://jax-ml.github.io/scaling-book/
 
 ### Course Homepage
 
@@ -86,3 +86,5 @@
 - deep_thoughts: https://space.bilibili.com/373596439
 - Maki的完美算术教室: https://space.bilibili.com/391930545
 - kumiko想要学分析: https://space.bilibili.com/3156848
+- 苍陌：[https://erl.im/](https://erl.im/)
+- 日语博客集合：[https://hatena.blog/](https://hatena.blog/)
